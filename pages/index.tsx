@@ -1,14 +1,17 @@
+import React, {useState} from 'react'
+
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '@/styles/Home.module.css'
 //Components
-import { BackgroundImage1, BackgroundImage2, GradientBackgroundCon } from '@/components/QuoteGenerator/QuoteGeneratorElements'
+import { BackgroundImage1, BackgroundImage2, FooterCon, FooterLink, GradientBackgroundCon, RedSpan } from '@/components/QuoteGenerator/QuoteGeneratorElements'
 //Assets
 import Clouds1 from '@/assets/cloud-and-thunder.png'
 import Clouds2 from '@/assets/cloudy-weather.png'
 
 
 export default function Home() {
+  const [numberOfQuotes, setNumberOfQuotes] = useState<Number | null>(0)
   return (
     <>
       <Head>
@@ -31,6 +34,16 @@ export default function Home() {
           height="300"
           alt="cloudybackground1"
           />          
+
+         <FooterCon>
+            <>
+              Quotes Generated: {numberOfQuotes}
+              <br />
+              Developed with <RedSpan>love</RedSpan> by <FooterLink href="https://github.com/f-taboada"
+              target="_blank" rel="noopener noreferrer"> @FacundoTaboada </FooterLink>  
+            </>
+
+         </FooterCon>
       </GradientBackgroundCon>
     </>
   )
