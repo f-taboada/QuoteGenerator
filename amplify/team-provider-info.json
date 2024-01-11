@@ -16,7 +16,13 @@
         "quotegeneratorc243342e": {}
       },
       "function": {
-        "quoteGeneratorLambda": {}
+        "quoteGeneratorLambda": {
+          "deploymentBucketName": "amplify-quotegenerator-dev-115902-deployment",
+          "s3Key": "amplify-builds/quoteGeneratorLambda-4c54413844733455382f-build.zip"
+        }
+      },
+      "api": {
+        "quotegenerator": {}
       }
     }
   }

@@ -41,7 +41,7 @@ export default function Home() {
             </QuoteGeneratorSubTitle>
 
             <GenerateQuoteButton>
-              <GenerateQuoteButtonText onClick={null}>
+              <GenerateQuoteButtonText>
                 Make a Quote
               </GenerateQuoteButtonText>
             </GenerateQuoteButton>
