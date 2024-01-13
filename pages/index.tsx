@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 
 import Head from 'next/head'
 import Image from 'next/image'
@@ -8,10 +8,50 @@ import { BackgroundImage1, BackgroundImage2, FooterCon, FooterLink, GenerateQuot
 //Assets
 import Clouds1 from '@/assets/cloud-and-thunder.png'
 import Clouds2 from '@/assets/cloudy-weather.png'
+import { generateClient } from 'aws-amplify/api';
+import { createQuoteAppData, updateQuoteAppData, deleteQuoteAppData } from '../src/graphql/mutations';
+import { quoteQueryName } from '@/src/graphql/queries'
+
+
+// Interface for our DynamoDb Object
+interface UpdateQuoteInfoData {
+  id: string;
+  queryName: string;
+  quotesGenerated: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// Type guard for our fetch function
 
 
 export default function Home() {
   const [numberOfQuotes, setNumberOfQuotes] = useState<Number | null>(0)
+
+  const client = generateClient();
+
+  // Function to fetch our DynamoDb object (quotes generated)
+  const updateQuoteInfo = async () => {
+    try {
+      const response = await client.graphql<UpdateQuoteInfoData>({
+        query: quoteQueryName,
+        authMode: 'iam',
+        variables: {
+          queryName: "LIVE",
+        },
+      })
+      console.log('response', response);
+
+    } catch (error) {
+      console.log('Error getting quote data ' + error)
+    }
+  }
+
+  useEffect(() => {
+    updateQuoteInfo();
+  }, [])
+
+  
   return (
     <>
       <Head>
@@ -41,7 +81,9 @@ export default function Home() {
             </QuoteGeneratorSubTitle>
 
             <GenerateQuoteButton>
-              <GenerateQuoteButtonText>
+              <GenerateQuoteButtonText
+              // onClick={null}
+              >
                 Make a Quote
               </GenerateQuoteButtonText>
             </GenerateQuoteButton>
