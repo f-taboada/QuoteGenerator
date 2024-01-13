@@ -8,7 +8,7 @@ import { BackgroundImage1, BackgroundImage2, FooterCon, FooterLink, GenerateQuot
 //Assets
 import Clouds1 from '@/assets/cloud-and-thunder.png'
 import Clouds2 from '@/assets/cloudy-weather.png'
-import { generateClient } from 'aws-amplify/api';
+import { GraphQLResult, generateClient } from 'aws-amplify/api';
 import { createQuoteAppData, updateQuoteAppData, deleteQuoteAppData } from '../src/graphql/mutations';
 import { quoteQueryName } from '@/src/graphql/queries'
 
@@ -23,6 +23,13 @@ interface UpdateQuoteInfoData {
 }
 
 // Type guard for our fetch function
+function isGraphQLResultForquoteQueryName(response: any): response is GraphQLResult<{
+  quoteQueryName: {
+    items: [UpdateQuoteInfoData];
+  };
+}> {
+  return response.data && response.data.quoteQueryName && response.data.quoteQueryName.items;
+}
 
 
 export default function Home() {
@@ -40,6 +47,18 @@ export default function Home() {
           queryName: "LIVE",
         },
       })
+
+      if (!isGraphQLResultForquoteQueryName(response)) {
+        throw new Error('Unexpected response from client.graphql')
+      }
+
+      if (!response.data) {
+        throw new Error('Response data is undefined')
+      }
+
+      const receivedNumberOfQuotes = response.data.quoteQueryName.items[0].quotesGenerated;
+      setNumberOfQuotes(receivedNumberOfQuotes)
+      
       console.log('response', response);
 
     } catch (error) {
@@ -51,7 +70,7 @@ export default function Home() {
     updateQuoteInfo();
   }, [])
 
-  
+
   return (
     <>
       <Head>
